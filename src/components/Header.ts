@@ -15,6 +15,7 @@
 
 import { StyleSheet, css } from "aphrodite/no-important"
 import { YElem, Y } from "../YElem/YElem"
+import { LoadingBar } from "./LoadingBar"
 
 const e = StyleSheet.create({
     titleContainer: {
@@ -72,6 +73,34 @@ const e = StyleSheet.create({
     },
 })
 
+class MainButton extends YElem {
+    constructor(text: string, color: string) {
+        const parent = Y.button()
+        super(parent)
+        const style = StyleSheet.create({
+            e: {
+                padding: "0.6rem 1rem",
+                fontSize: "1rem",
+                // fontWeight: "bold",
+                marginRight: "1rem",
+                marginBottom: "2rem",
+                marginTop: "2rem",
+                border: `solid 3px ${color}`,
+                textDecorationLine: "underline",
+                backgroundColor: "var(--bg-color)",
+                color: "var(--color)",
+                borderRadius: "2px",
+                cursor: "pointer",
+                ":hover": {
+                    color: "white",
+                    backgroundColor: `${color}`,
+                },
+            },
+        })
+        parent.add({className: css(style.e)}, text)
+    }
+}
+
 export class Header extends YElem {
     constructor() {
         const parent = Y.div()
@@ -90,23 +119,12 @@ export class Header extends YElem {
                 "a schedule",
             ]),
             Y.p({className: css(e.motto2)}, "That's Yotei"),
+            Y.div({className: css(e.padded)}, [
+                Y.a({href: "test1"}, new MainButton("Start", "var(--c2)")),
+                Y.a({href: "test2"}, new MainButton("Create", "var(--c1)")),
+                Y.a({href: "test3"}, new MainButton("Help", "var(--c5)")),
+            ]),
+            new LoadingBar(true),
         ])
-
-        /*
-        this.instance.innerHTML = `
-
-        <p class="${css(e.motto2)}">That's Misti</p>
-
-        <div class="${css(e.padded)}">
-            <Link href="#test">
-                <MainButton text={"Learn"} color={"#04abfc"} />
-            </Link>
-            <MainButton text={"Install"} color={"#e7b711"} />
-            <Link href="#test">
-                <MainButton text={"Spec"} color={"#39b487"} />
-            </Link>
-        </div>
-        `
-         */
     }
 }
