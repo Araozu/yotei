@@ -1,0 +1,78 @@
+
+:root {
+    --c1: #e7b711;
+    --c2: #04abfc;
+    --c3: #fca8d1;
+    --c4: #f44336;
+    --c5: #39b487;
+    --c3-transparent: rgba(252, 168, 209, 0.35);
+
+    --bg-color: #202020;
+    --color: #dedede;
+    --code-bg-color: #151515;
+    --code-color: #bababa;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-color: #fffdfc;
+        --color: #404040;
+        --code-bg-color: #fdf6e3;
+        --code-color: #073642;
+    }
+}
+
+html {
+    font-size: 22px;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--color);
+}
+
+
+@keyframes gradientBG {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-25%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.main-container {
+    margin: 0 auto;
+    max-width: 1400px;
+    width: 90%;
+}
+
+.rainbow-separator {
+    animation-name: gradientBG;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    background: linear-gradient(
+            135deg,
+            #e7b711 0%, #e7b711 5%,
+            #04abfc 10%, #04abfc 15%,
+            #fca8d1 20%, #fca8d1 25%,
+            #f44336 30%, #f44336 35%,
+            #39b487 40%, #39b487 45%,
+            #e7b711 50%, #e7b711 55%,
+            #04abfc 60%, #04abfc 65%,
+            #fca8d1 70%, #fca8d1 75%,
+            #f44336 80%, #f44336 85%,
+            #39b487 90%, #39b487 95%,
+            #e7b711 100%
+    )
+}
+
+h2 {
+    font-weight: normal;
+    font-size: 2rem;
+}
+

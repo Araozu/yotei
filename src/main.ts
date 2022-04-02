@@ -1,8 +1,7 @@
-import "./style.css"
+import "normalize.css"
+import "./styles/global.css"
+import { Header } from "./components/Header"
 
 const app = document.querySelector<HTMLDivElement>("#app")!
-
-app.innerHTML = `
-  <h1>Hello Vite!</h1>
-  <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
-`
+const header = new Header()
+app.appendChild(header.getInstance())
