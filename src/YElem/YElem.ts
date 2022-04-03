@@ -68,9 +68,9 @@ function yFunGen(elem: string): YFunction {
     }
 }
 
-type elements = "div" | "h1" | "span" | "br" | "p" | "a" | "button"
+type elements = "div" | "h1" | "span" | "br" | "p" | "a" | "button" | "img"
 type YElements = Record<elements, YFunction>
-const htmlElems: elements[] = ["div", "h1", "span", "br", "p", "a", "button"]
+const htmlElems: elements[] = ["div", "h1", "span", "br", "p", "a", "button", "img"]
 
 const YHtmlElems = {} as YElements
 for (const htmlElem of htmlElems) {

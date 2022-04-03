@@ -71,6 +71,11 @@ const e = StyleSheet.create({
             textDecoration: "underline",
         },
     },
+    logo: {
+        position: "absolute",
+        right: "4rem",
+        height: "12rem",
+    },
 })
 
 class MainButton extends YElem {
@@ -108,6 +113,7 @@ export class Header extends YElem {
 
         parent.add(null, [
             Y.div({"className": css(e.motto, e.padded)}, [
+                Y.img({src: "/logo_yotei.svg", className: css(e.logo)}),
                 "A ",
                 Y.span({style: "color: var(--c1); font-weight: bold"}, "B"),
                 Y.span({style: "color: var(--c2); font-weight: bold"}, "E"),
