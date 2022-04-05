@@ -122,7 +122,7 @@ export class Header extends YElem {
                 Y.span({style: "color: var(--c5); font-weight: bold"}, "R"),
                 " way to create",
                 Y.br(),
-                "a schedule",
+                "an academic schedule",
             ]),
             Y.p({className: css(e.motto2)}, "That's Yotei"),
             Y.div({className: css(e.padded)}, [
