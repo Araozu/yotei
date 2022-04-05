@@ -60,7 +60,7 @@ export class YElem {
     }
 }
 
-type YFunction = (options?: Record<string, string>, children?: YChildren) => YElem
+type YFunction = (options?: Record<string, string> | null | undefined, children?: YChildren) => YElem
 
 function yFunGen(elem: string): YFunction {
     return function(options, children) {

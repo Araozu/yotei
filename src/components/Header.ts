@@ -106,11 +106,10 @@ class MainButton extends YElem {
     }
 }
 
-export class Header extends YElem {
+class MainHeader extends YElem {
     constructor() {
         const parent = Y.div()
         super(parent)
-
         parent.add(null, [
             Y.div({"className": css(e.motto, e.padded)}, [
                 Y.img({src: "/logo_yotei.svg", className: css(e.logo)}),
@@ -126,11 +125,43 @@ export class Header extends YElem {
             ]),
             Y.p({className: css(e.motto2)}, "That's Yotei"),
             Y.div({className: css(e.padded)}, [
-                Y.a({href: "test1"}, new MainButton("Start", "var(--c2)")),
-                Y.a({href: "test2"}, new MainButton("Create", "var(--c1)")),
+                Y.a({href: "start.html"}, new MainButton("Start", "var(--c2)")),
+                Y.a({href: "create.html"}, new MainButton("Create", "var(--c1)")),
                 Y.a({href: "test3"}, new MainButton("Help", "var(--c5)")),
             ]),
-            new LoadingBar(true),
+        ])
+    }
+}
+
+class MiniHeader extends YElem {
+    constructor() {
+        const parent = Y.div()
+        super(parent)
+        parent.add({className: css(e.header2)}, [
+            Y.div({className: css(e.headerLink)}, [
+                Y.a({href: "/", className: css(e.headerMainLink)}, "Yotei"),
+            ]),
+            Y.div({className: css(e.headerLink)}, [
+                Y.a({href: "/start.html", className: css(e.headerNormalLink)}, "Start"),
+            ]),
+            Y.div({className: css(e.headerLink)}, [
+                Y.a({href: "/create.html", className: css(e.headerNormalLink)}, "Create"),
+            ]),
+            Y.div({className: css(e.headerLink)}, [
+                Y.a({href: "/help.html", className: css(e.headerNormalLink)}, "Help"),
+            ]),
+        ])
+    }
+}
+
+export class Header extends YElem {
+    constructor(isMainPage: boolean) {
+        const parent = Y.div()
+        super(parent)
+
+        parent.add(null, [
+            isMainPage ? new MainHeader() : new MiniHeader(),
+            new LoadingBar(isMainPage),
         ])
     }
 }

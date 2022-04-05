@@ -16,7 +16,13 @@
 import "normalize.css"
 import "./styles/global.css"
 import { Header } from "./components/Header"
+import { Y } from "./YElem/YElem"
+import { Table } from "./components/Table"
 
 const app = document.querySelector<HTMLDivElement>("#app")!
-const header = new Header(true)
-app.appendChild(header.getInstance())
+const tree = Y.div(null, [
+    new Header(false),
+    Y.br(),
+    new Table(),
+])
+app.appendChild(tree.getInstance())
