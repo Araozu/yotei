@@ -15,18 +15,92 @@
 
 import { Y, YElem } from "../../YElem/YElem"
 import { TableManager } from "../TableManager"
+import { StyleSheet, css } from "aphrodite/no-important"
+
+
+const e = StyleSheet.create({
+    celdaCurso: {
+        display: "inline-block",
+        padding: "0.25rem 0.35rem",
+        cursor: "pointer",
+        borderRadius: "5px",
+        // transition: "background-color 100ms, color 100ms"
+    },
+    celdaResaltado: {
+        // color: "#151515"
+    },
+    celdaCursoTeoria: {
+        fontWeight: "bold",
+    },
+    celdaCursoLab: {
+        fontStyle: "italic",
+    },
+    celdaSeleccionado: {
+        textDecoration: "underline",
+        backgroundColor: "rgba(200, 200, 200, 0.3)",
+    },
+    celdaOculto: {
+        opacity: 0.3,
+    },
+    celdaResaltadoOculto: {
+        opacity: 0.7,
+    },
+    celdaResaltadoSeleccionado: {
+        textDecoration: "underline",
+    },
+})
+
 
 /**
- * Represents an element of the schedule. It changes color when hovered,
+ * Represents an entry of the schedule. It changes color when hovered,
  * highlights the hour and communicates with other entries via TableManager.
  *
  * It is placed inside a TableCell.
  */
 export class TableEntry extends YElem {
     private manager: TableManager
-    constructor(manager: TableManager) {
+    private hovered = false
+    private color: string
+
+    constructor(
+        subject: string,
+        group: string,
+        isLab: boolean,
+        color: string,
+        manager: TableManager,
+    ) {
         const parent = Y.div()
         super(parent)
+        parent.add(
+            {className: css(
+                e.celdaCurso,
+                isLab ? e.celdaCursoLab : e.celdaCursoTeoria,
+            )},
+            `${subject} ${isLab ? "L" : ""}${group}`,
+        )
+
         this.manager = manager
+        this.color = color
+        parent.getInstance().addEventListener("mouseenter", () => {
+            this.hovered = true
+            this.checkHover()
+        })
+        parent.getInstance().addEventListener("mouseleave", () => {
+            this.hovered = false
+            this.checkHover()
+        })
+    }
+
+    private checkHover() {
+        if (this.hovered) {
+            this.getInstance().style.backgroundColor = this.color
+            // If the bg color is c1, c3 or c5, add a black color for contrast
+            if (this.color === "var(--c1)" || this.color === "var(--c3)" || this.color === "var(--c5)") {
+                this.getInstance().style.color = "black"
+            }
+        } else {
+            this.getInstance().style.backgroundColor = ""
+            this.getInstance().style.color = ""
+        }
     }
 }

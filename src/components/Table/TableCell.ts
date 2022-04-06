@@ -16,6 +16,7 @@
 import { Y, YElem } from "../../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
 import { TableManager } from "../TableManager"
+import { TableEntry } from "./TableEntry"
 
 const e = StyleSheet.create({
     celdaComun: {
@@ -61,30 +62,40 @@ const e = StyleSheet.create({
  * Represents a container in a specific hour and day
  */
 export class TableCell extends YElem {
-    private manager: TableManager
+    protected manager: TableManager
     protected parent: YElem
-    constructor(manager: TableManager) {
+    constructor(color: string, manager: TableManager) {
         const parent = Y.div()
         super(parent)
-        parent.add({className: css(e.celdaComun)}, "cell")
+        parent.add(
+            {className: css(e.celdaComun)},
+            new TableEntry("FP1", "A", false, color, manager),
+        )
 
         this.manager = manager
         this.parent = parent
+    }
+
+    public addEntry(entry: TableEntry) {
+        this.add(null, entry)
     }
 }
 
 export class SelectableTableCell extends TableCell {
     private isSelected = false
-    constructor(manager: TableManager) {
-        super(manager)
+    private color: string
+
+    constructor(color: string, manager: TableManager) {
+        super(color, manager)
+        this.color = color
         this.parent.getInstance().addEventListener("mouseenter", () => this.toggleSelection())
     }
 
     public toggleSelection() {
         this.isSelected = !this.isSelected
         if (this.isSelected) {
-            this.parent.getInstance().style.borderLeft = "solid 3px var(--c5)"
-            this.parent.getInstance().style.borderRight = "solid 3px var(--c5)"
+            this.parent.getInstance().style.borderLeft = `solid 3px ${this.color}`
+            this.parent.getInstance().style.borderRight = `solid 3px ${this.color}`
         } else {
             this.parent.getInstance().style.borderLeft = "none"
             this.parent.getInstance().style.borderRight = "none"

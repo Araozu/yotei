@@ -15,7 +15,7 @@
 
 import { Y, YElem } from "../../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
-import { days } from "../Table"
+import { days, dayToColor } from "../Table"
 import { SelectableTableCell } from "./TableCell"
 import { TableManager } from "../TableManager"
 
@@ -64,12 +64,15 @@ const e = StyleSheet.create({
 })
 
 class TableRowHighlight extends YElem {
+    color: string
+
     constructor(color: string) {
         const parent = Y.div({
             className: css(e.celdaResaltado),
-            style: `background-color: ${color}`,
+            // style: `background-color: ${color}`,
         })
         super(parent)
+        this.color = color
     }
 }
 
@@ -93,7 +96,12 @@ export class TableRow extends YElem {
                     new TableRowHighlight("var(--c4)"),
                     new TableRowHighlight("var(--c5)"),
                 ]),
-                ...(days.map(() => new SelectableTableCell(manager))),
+                ...(days.map((day) => {
+                    const color = dayToColor(day)
+                    const cell = new SelectableTableCell(color, manager)
+                    manager.registerCell(day, hour, cell)
+                    return cell
+                })),
             ]),
         ])
     }

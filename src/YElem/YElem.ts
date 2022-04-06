@@ -26,6 +26,11 @@ export class YElem {
         }
     }
 
+    /**
+     * Adds attributes, renders children and appends them to this element
+     * @param options html attributes to add
+     * @param children elements to append. They are immediately rendered
+     */
     add(options?: Record<string, string> | null, children?: YChildren): YElem {
         if (options) {
             for (const optionsKey in options) {

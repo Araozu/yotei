@@ -50,6 +50,16 @@ export const hoursOff = [
     "17:30",
 ]
 
+export function dayToColor(d: Day): string {
+    switch (d) {
+        case "Lunes": return "var(--c1)"
+        case "Martes": return "var(--c2)"
+        case "Miercoles": return "var(--c3)"
+        case "Jueves": return "var(--c4)"
+        case "Viernes": return "var(--c5)"
+    }
+}
+
 export class Table extends YElem {
     private manager = new TableManager()
     constructor() {
