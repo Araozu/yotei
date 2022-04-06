@@ -29,7 +29,6 @@ export class YElem {
     add(options?: Record<string, string> | null, children?: YChildren): YElem {
         if (options) {
             for (const optionsKey in options) {
-                console.log("Appending", optionsKey, options[optionsKey])
                 // @ts-ignore
                 this.instance[optionsKey] = options[optionsKey]
             }

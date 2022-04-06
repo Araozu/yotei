@@ -16,7 +16,8 @@
 import { Y, YElem } from "../../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
 import { days } from "../Table"
-import { TableCell } from "./TableCell"
+import { SelectableTableCell } from "./TableCell"
+import { TableManager } from "../TableManager"
 
 const e = StyleSheet.create({
     celdaHora: {
@@ -50,7 +51,7 @@ const e = StyleSheet.create({
         height: "1px",
         width: "100%",
         backgroundColor: "rgba(200, 200, 200, 0.25)",
-        zIndex: -1,
+        zIndex: -2,
     },
     celdaResaltado: {
         height: "102%",
@@ -73,7 +74,7 @@ class TableRowHighlight extends YElem {
 }
 
 export class TableRow extends YElem {
-    constructor(hour: string) {
+    constructor(hour: string, manager: TableManager) {
         const parent = Y.div({style: "position: relative"})
         super(parent)
         parent.add(null, [
@@ -92,7 +93,7 @@ export class TableRow extends YElem {
                     new TableRowHighlight("var(--c4)"),
                     new TableRowHighlight("var(--c5)"),
                 ]),
-                ...(days.map(() => new TableCell())),
+                ...(days.map(() => new SelectableTableCell(manager))),
             ]),
         ])
     }

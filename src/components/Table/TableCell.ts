@@ -15,6 +15,7 @@
 
 import { Y, YElem } from "../../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
+import { TableManager } from "../TableManager"
 
 const e = StyleSheet.create({
     celdaComun: {
@@ -56,10 +57,37 @@ const e = StyleSheet.create({
     },
 })
 
+/**
+ * Represents a container in a specific hour and day
+ */
 export class TableCell extends YElem {
-    constructor() {
+    private manager: TableManager
+    protected parent: YElem
+    constructor(manager: TableManager) {
         const parent = Y.div()
         super(parent)
         parent.add({className: css(e.celdaComun)}, "cell")
+
+        this.manager = manager
+        this.parent = parent
+    }
+}
+
+export class SelectableTableCell extends TableCell {
+    private isSelected = false
+    constructor(manager: TableManager) {
+        super(manager)
+        this.parent.getInstance().addEventListener("mouseenter", () => this.toggleSelection())
+    }
+
+    public toggleSelection() {
+        this.isSelected = !this.isSelected
+        if (this.isSelected) {
+            this.parent.getInstance().style.borderLeft = "solid 3px var(--c5)"
+            this.parent.getInstance().style.borderRight = "solid 3px var(--c5)"
+        } else {
+            this.parent.getInstance().style.borderLeft = "none"
+            this.parent.getInstance().style.borderRight = "none"
+        }
     }
 }

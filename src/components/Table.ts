@@ -15,6 +15,7 @@
 
 import { Y, YElem } from "../YElem/YElem"
 import { TableRow } from "./Table/TableRow"
+import { TableManager } from "./TableManager"
 
 export type Day = "Lunes" | "Martes" | "Miercoles" | "Jueves" | "Viernes";
 
@@ -50,13 +51,13 @@ export const hoursOff = [
 ]
 
 export class Table extends YElem {
+    private manager = new TableManager()
     constructor() {
         const parent = Y.div()
         super(parent)
 
-        const rows = hours.map((h) => new TableRow(h))
+        const rows = hours.map((h) => new TableRow(h, this.manager))
 
         parent.add({style: "padding-top: 2rem; font-size: 16px"}, rows)
-
     }
 }
