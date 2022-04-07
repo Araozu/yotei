@@ -95,9 +95,11 @@ export class TableEntry extends YElem {
         if (this.hovered) {
             this.getInstance().style.backgroundColor = this.color
             // If the bg color is c1, c3 or c5, add a black color for contrast
-            if (this.color === "var(--c1)" || this.color === "var(--c3)" || this.color === "var(--c5)") {
-                this.getInstance().style.color = "black"
-            }
+            //if (this.color === "var(--c1)" || this.color === "var(--c3)" || this.color === "var(--c5)") {
+            //    this.getInstance().style.color = "black"
+            //} else {
+            this.getInstance().style.color = "white"
+            //}
         } else {
             this.getInstance().style.backgroundColor = ""
             this.getInstance().style.color = ""

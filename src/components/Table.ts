@@ -23,31 +23,21 @@ export const days: Day[] = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"]
 export const hours = [
     "07:00",
     "07:50",
-    "08:40",
     "08:50",
     "09:40",
-    "10:30",
     "10:40",
     "11:30",
     "12:20",
     "13:10",
     "14:00",
     "14:50",
-    "15:40",
     "15:50",
     "16:40",
-    "17:30",
     "17:40",
     "18:30",
     "19:20",
     "20:10",
     "21:00",
-]
-export const hoursOff = [
-    "08:40",
-    "10:30",
-    "15:40",
-    "17:30",
 ]
 
 export function dayToColor(d: Day): string {
