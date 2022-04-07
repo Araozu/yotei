@@ -18,11 +18,13 @@ import "./styles/global.css"
 import { Header } from "./components/Header"
 import { Y } from "./YElem/YElem"
 import { Table } from "./components/Table"
+import { CLI } from "./components/CLI"
 
 const app = document.querySelector<HTMLDivElement>("#app")!
 const tree = Y.div(null, [
     new Header(false),
     Y.br(),
     new Table(),
+    new CLI(),
 ])
 app.appendChild(tree.getInstance())
