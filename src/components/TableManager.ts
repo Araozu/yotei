@@ -13,22 +13,45 @@
  * if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import { TableCell } from "./Table/TableCell"
+import { SelectableTableCell, TableCell } from "./Table/TableCell"
+import { Day } from "./Table"
 
-class CellPosition {
-    protected day: string
-    protected hour: string
+export class TableManager {
+    /**
+     * Mapping between day and hour and cell.
+     * The first string is DAY_HOUR, e.g. Lunes_07:00
+     */
+    protected cells: Map<string, TableCell> = new Map()
 
-    constructor(day: string, hour: string) {
-        this.day = day
-        this.hour = hour
+    registerCell(day: string, hour: string, cell: TableCell) {
+        this.cells.set(`${day}_${hour}`, cell)
     }
 }
 
-export class TableManager {
-    private cells: Map<CellPosition, TableCell> = new Map()
+export class SelectableTableManager extends TableManager {
+    private currentDay: Day = "Lunes"
+    private selectedCell?: SelectableTableCell
 
-    registerCell(day: string, hour: string, cell: TableCell) {
-        this.cells.set(new CellPosition(day, hour), cell)
+    constructor() {
+        super()
+    }
+
+    registerCell(day: string, hour: string, cell: SelectableTableCell) {
+        super.registerCell(day, hour, cell)
+    }
+
+    highlightCell(hour: string, day: Day = this.currentDay) {
+        const pos = `${day}_${hour}`
+        if (this.cells.has(pos)) {
+            // First unselect current selection
+            if (this.selectedCell) {
+                this.selectedCell.toggleSelection()
+            }
+            // Then highlight the cell
+            this.selectedCell = (this.cells.get(pos) as SelectableTableCell)
+            this.selectedCell.toggleSelection()
+
+            this.currentDay = day
+        }
     }
 }

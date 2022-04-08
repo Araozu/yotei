@@ -88,7 +88,7 @@ export class SelectableTableCell extends TableCell {
     constructor(color: string, manager: TableManager) {
         super(color, manager)
         this.color = color
-        this.parent.getInstance().addEventListener("mouseenter", () => this.toggleSelection())
+        // this.parent.getInstance().addEventListener("mouseenter", () => this.toggleSelection())
     }
 
     public toggleSelection() {

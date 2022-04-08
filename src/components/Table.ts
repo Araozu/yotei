@@ -51,13 +51,13 @@ export function dayToColor(d: Day): string {
 }
 
 export class Table extends YElem {
-    private manager = new TableManager()
-    constructor() {
+    private manager: TableManager
+    constructor(manager: TableManager) {
         const parent = Y.div()
         super(parent)
+        this.manager = manager
 
         const rows = hours.map((h) => new TableRow(h, this.manager))
-
         parent.add({style: "padding-top: 2rem; font-size: 16px"}, rows)
     }
 }

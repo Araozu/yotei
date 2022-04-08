@@ -13,9 +13,10 @@
  * if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import { TableManager } from "./TableManager"
+import { SelectableTableManager } from "./TableManager"
 import { YElem, Y } from "../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
+import { Day, days } from "./Table"
 
 const style = StyleSheet.create({
     cli: {
@@ -48,9 +49,9 @@ const style = StyleSheet.create({
  * via a TableManager
  */
 export class CLI extends YElem {
-    private manager: TableManager
+    private manager: SelectableTableManager
 
-    constructor(manager: TableManager) {
+    constructor(manager: SelectableTableManager) {
         const parent = Y.div()
         super(parent)
         this.manager = manager
@@ -92,7 +93,11 @@ export class CLI extends YElem {
      * @private
      */
     private interpret(line: string) {
-        console.log(CLI.parseGCommand(line))
+        const result = CLI.parseGCommand(line)
+        if (result !== null) {
+            const [day, hour] = result
+            this.manager.highlightCell(hour, day)
+        }
     }
 
     /**
@@ -103,11 +108,41 @@ export class CLI extends YElem {
      * </pre>
      * @param line to test
      */
-    private static parseGCommand(line: string): [string | null, string] | null {
+    private static parseGCommand(line: string): [Day | undefined, string] | null {
         const regex = /g\s+((\w+)\s+)?(\d\d?\d?)/i.exec(line)
         if (regex && regex[3]) {
-            const day = regex[2] ? regex[2] : null
-            return [day, regex[3]]
+            let day: Day | undefined = undefined
+            let hour = regex[3]
+
+            // Handle day
+            if (regex[2]) {
+                for (const d of days) {
+                    if (d.toLowerCase().startsWith(regex[2].toLowerCase())) {
+                        day = d
+                    }
+                }
+            }
+
+            // Handle hour
+            switch (hour.length) {
+                case 1: {
+                    hour = `0${hour}:00`
+                    break
+                }
+                case 2: {
+                    hour = `${hour}:00`
+                    break
+                }
+                case 3: {
+                    hour = `${hour.substring(0, 2)}:${hour.charAt(2)}0`
+                    break
+                }
+                case 4: {
+                    hour = `${hour.substring(0, 2)}:${hour.substring(2, 4)}`
+                    break
+                }
+            }
+            return [day, hour]
         }
         return null
     }
