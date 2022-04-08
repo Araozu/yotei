@@ -26,6 +26,7 @@ const e = StyleSheet.create({
         boxSizing: "border-box",
         userSelect: "none",
         display: "inline-block",
+        minHeight: "1rem",
     },
     celdaCurso: {
         display: "inline-block",
@@ -64,13 +65,10 @@ const e = StyleSheet.create({
 export class TableCell extends YElem {
     protected manager: TableManager
     protected parent: YElem
-    constructor(color: string, manager: TableManager) {
+    constructor(_color: string, manager: TableManager) {
         const parent = Y.div()
         super(parent)
-        parent.add(
-            {className: css(e.celdaComun)},
-            new TableEntry("FP1", "A", false, color, manager),
-        )
+        parent.add({className: css(e.celdaComun)})
 
         this.manager = manager
         this.parent = parent

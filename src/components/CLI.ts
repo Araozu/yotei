@@ -17,6 +17,8 @@ import { SelectableTableManager } from "./TableManager"
 import { YElem, Y } from "../YElem/YElem"
 import { StyleSheet, css } from "aphrodite/no-important"
 import { Day, days } from "./Table"
+import { SubjectManager } from "./SubjectManager"
+import { Professor, ProfessorManager } from "./ProfessorManager"
 
 const style = StyleSheet.create({
     cli: {
@@ -50,11 +52,14 @@ const style = StyleSheet.create({
  */
 export class CLI extends YElem {
     private manager: SelectableTableManager
+    private subjectManager: SubjectManager
+    private professorManager = new ProfessorManager()
 
-    constructor(manager: SelectableTableManager) {
+    constructor(manager: SelectableTableManager, subjectManager: SubjectManager) {
         const parent = Y.div()
         super(parent)
         this.manager = manager
+        this.subjectManager = subjectManager
 
         const formEl = Y.form({style: "display: inline-block; width: 90%"})
         const inputEl = Y.input({className: css(style.cliInput)})
@@ -93,10 +98,27 @@ export class CLI extends YElem {
      * @private
      */
     private interpret(line: string) {
-        const result = CLI.parseGCommand(line)
-        if (result !== null) {
-            const [day, hour] = result
+        const result1 = CLI.parseGCommand(line)
+        if (result1 !== null) {
+            const [day, hour] = result1
             this.manager.highlightCell(hour, day)
+        }
+
+        const result2 = CLI.parseRCommand(line)
+        if (result2 !== null) {
+            const [subject, group, professorName] = result2
+
+            let professor: Professor | undefined
+            if (professorName) {
+                const professorArr = this.professorManager.getMatches(professorName)
+                if (professorArr.length > 0 && professorArr[0].name === professorName) {
+                    professor = professorArr[0]
+                } else {
+                    professor = this.professorManager.add(professorName)
+                }
+            }
+
+            this.subjectManager.register(subject, group, professor)
         }
     }
 
@@ -164,14 +186,10 @@ export class CLI extends YElem {
         return null
     }
 
-    private static parseRCommand(line: string): string | [string, string, string] | null {
-        const values = /r\s+(\w+)\s+(l?\w)\s+([\w\s]+)/i.exec(line)
-        if (values && values[1] && values[2] && values[3]) {
+    private static parseRCommand(line: string): [string, string | undefined, string | undefined] | null {
+        const values = /r\s+(\w+)\s+(l?\w)?\s+([\w\s]+)?/i.exec(line)
+        if (values && values[1]) {
             return [values[1], values[2], values[3]]
-        }
-        const second = /r\s+(\w+)/i.exec(line)
-        if (second && second[1]) {
-            return second[1]
         }
         return null
     }
