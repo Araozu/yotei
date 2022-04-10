@@ -71,22 +71,28 @@ export class SelectableTableManager extends TableManager {
     }
 
     nextCell() {
-        const currentHourPosition = hours.findIndex((x) => this.currentHour === x)
+        [this.currentHour, this.currentDay] = SelectableTableManager.getNextCellCoordinates(this.currentHour, this.currentDay)
+        this.highlightCell(this.currentHour, this.currentDay)
+    }
+
+    getCurrentCoordinates(): [string, Day] {
+        return [this.currentHour, this.currentDay]
+    }
+
+    static getNextCellCoordinates(currentHour: string, currentDay: Day): [string, Day] {
+        const currentHourPosition = hours.findIndex((x) => currentHour === x)
         // If the last hour is selected, go to first hour of the next day
         if (currentHourPosition === -1 || currentHourPosition === hours.length - 1) {
-            const currentDayPosition = days.findIndex((x) => this.currentDay === x)
+            const currentDayPosition = days.findIndex((x) => currentDay === x)
             if (currentDayPosition === -1 && currentDayPosition === days.length - 1) {
                 // Go to first day
-                this.currentDay = days[0]
-                this.currentHour = hours[0]
+                return [hours[0], days[0]]
             } else {
                 // Go to next day
-                this.currentDay = days[currentDayPosition + 1]
-                this.currentHour = hours[0]
+                return [hours[0], days[currentDayPosition + 1]]
             }
         } else {
-            this.currentHour = hours[currentHourPosition + 1]
+            return [hours[currentHourPosition + 1], currentDay]
         }
-        this.highlightCell(this.currentHour, this.currentDay)
     }
 }

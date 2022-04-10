@@ -63,6 +63,8 @@ export class TableEntry extends YElem {
     private hovered = false
     private color: string
     private subject: Subject
+    private isLab: boolean
+    private group: string
 
     constructor(
         subject: Subject,
@@ -81,6 +83,8 @@ export class TableEntry extends YElem {
             `${subject.name} ${isLab ? "L" : ""}${group}`,
         )
 
+        this.isLab = isLab
+        this.group = group
         this.manager = manager
         this.color = color
         this.subject = subject
@@ -107,5 +111,15 @@ export class TableEntry extends YElem {
             this.getInstance().style.backgroundColor = ""
             this.getInstance().style.color = ""
         }
+    }
+
+    public clone(): TableEntry {
+        return new TableEntry(
+            this.subject,
+            this.group,
+            this.isLab,
+            this.color,
+            this.manager,
+        )
     }
 }

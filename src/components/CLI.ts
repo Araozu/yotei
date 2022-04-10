@@ -139,7 +139,7 @@ export class CLI extends YElem {
 
         const result3 = CLI.parseACommand(line)
         if (result3 !== null) {
-            const [subject, group, _repeat] = result3
+            const [subject, group, repeat] = result3
             const isLab = group.length === 2
             const groupLetter = isLab ? group.charAt(1) : group
 
@@ -147,9 +147,20 @@ export class CLI extends YElem {
                 const subjectObj = this.subjectManager.get(subject)!
                 // Create a table entry and register
                 const color = this.tableManager.getCurrentColor()
-                // TODO: clone
                 const entry = new TableEntry(subjectObj, group, isLab, color, this.tableManager)
+
                 this.tableManager.registerEntryAtCurrentPosition(entry)
+
+                if (repeat && repeat > 1) {
+                    let r = repeat
+                    let [currentHour, currentDay] = this.tableManager.getCurrentCoordinates()
+                    while (r > 1) {
+                        [currentHour, currentDay] = SelectableTableManager.getNextCellCoordinates(currentHour, currentDay)
+                        this.tableManager.registerEntry(currentDay, currentHour, entry.clone())
+                        r -= 1
+                    }
+                }
+
                 console.log("Entry registered (?)")
                 this.handleSuccess()
             } else {
