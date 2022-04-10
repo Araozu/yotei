@@ -14,6 +14,7 @@
  */
 
 import { Professor } from "./ProfessorManager"
+import { Day } from "./Table"
 
 export class Group {
     /**
@@ -24,6 +25,7 @@ export class Group {
      * The name of the professor
      */
     public readonly professor: Professor
+    public readonly hours: [Day, string][] = []
 
     constructor(letter: string, professor: Professor) {
         this.letter = letter
@@ -48,11 +50,29 @@ export class Subject {
         this.fullName = fullName
     }
 
-    addGroup(letter: string, professor: Professor, isLab = false) {
+    addGroup(letter: string, professor: Professor, isLab = false): Group {
+        const group = new Group(letter, professor)
         if (isLab) {
-            this.labGroups.push(new Group(letter, professor))
+            this.labGroups.push(group)
         } else {
-            this.groups.push(new Group(letter, professor))
+            this.groups.push(group)
+        }
+        return group
+    }
+
+    getGroup(letter: string, isLab = false): Group | undefined {
+        if (isLab) {
+            return this.groups.find((x) => x.letter === letter)
+        } else {
+            return this.labGroups.find((x) => x.letter === letter)
+        }
+    }
+
+    hasGroup(letter: string, isLab = false): boolean {
+        if (isLab) {
+            return this.labGroups.find((x) => x.letter === letter) !== undefined
+        } else {
+            return this.groups.find((x) => x.letter === letter) !== undefined
         }
     }
 }
@@ -67,8 +87,20 @@ export class SubjectManager {
 
         if (group && professor) {
             const subject = this.subjects.get(subjectName)!
-            // TODO: check group for l and group name
-            subject.addGroup()
+            const isLab = group.length === 2
+            const groupLetter = isLab ? group.charAt(1) : group
+
+            subject.addGroup(groupLetter, professor, isLab)
         }
+    }
+
+    has(subjectName: string, group: string, isLab: boolean): boolean {
+        if (!this.subjects.has(subjectName)) return false
+        const subject = this.subjects.get(subjectName)!
+        return subject.hasGroup(group, isLab)
+    }
+
+    get(subjectName: string): Subject | undefined {
+        return this.subjects.get(subjectName)
     }
 }

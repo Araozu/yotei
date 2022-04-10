@@ -16,6 +16,7 @@
 import { Y, YElem } from "../../YElem/YElem"
 import { TableManager } from "../TableManager"
 import { StyleSheet, css } from "aphrodite/no-important"
+import { Subject } from "../SubjectManager"
 
 
 const e = StyleSheet.create({
@@ -61,9 +62,10 @@ export class TableEntry extends YElem {
     private manager: TableManager
     private hovered = false
     private color: string
+    private subject: Subject
 
     constructor(
-        subject: string,
+        subject: Subject,
         group: string,
         isLab: boolean,
         color: string,
@@ -76,11 +78,12 @@ export class TableEntry extends YElem {
                 e.celdaCurso,
                 isLab ? e.celdaCursoLab : e.celdaCursoTeoria,
             )},
-            `${subject} ${isLab ? "L" : ""}${group}`,
+            `${subject.name} ${isLab ? "L" : ""}${group}`,
         )
 
         this.manager = manager
         this.color = color
+        this.subject = subject
         parent.getInstance().addEventListener("mouseenter", () => {
             this.hovered = true
             this.checkHover()

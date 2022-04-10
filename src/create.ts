@@ -20,13 +20,15 @@ import { Y } from "./YElem/YElem"
 import { Table } from "./components/Table"
 import { CLI } from "./components/CLI"
 import { SelectableTableManager } from "./components/TableManager"
+import { SubjectManager } from "./components/SubjectManager"
 
 const app = document.querySelector<HTMLDivElement>("#app")!
 const tableManager = new SelectableTableManager()
+const subjectManager = new SubjectManager()
 const tree = Y.div(null, [
     new Header(false),
     Y.br(),
     new Table(tableManager),
-    new CLI(tableManager),
+    new CLI(tableManager, subjectManager),
 ])
 app.appendChild(tree.getInstance())

@@ -14,7 +14,8 @@
  */
 
 import { SelectableTableCell, TableCell } from "./Table/TableCell"
-import { Day } from "./Table"
+import { Day, dayToColor } from "./Table"
+import { TableEntry } from "./Table/TableEntry"
 
 export class TableManager {
     /**
@@ -26,10 +27,15 @@ export class TableManager {
     registerCell(day: string, hour: string, cell: TableCell) {
         this.cells.set(`${day}_${hour}`, cell)
     }
+
+    registerEntry(day: Day, hour: string, entry: TableEntry) {
+        this.cells.get(`${day}_${hour}`)?.addEntry(entry)
+    }
 }
 
 export class SelectableTableManager extends TableManager {
     private currentDay: Day = "Lunes"
+    private currentHour = "07:00"
     private selectedCell?: SelectableTableCell
 
     constructor() {
@@ -38,6 +44,14 @@ export class SelectableTableManager extends TableManager {
 
     registerCell(day: string, hour: string, cell: SelectableTableCell) {
         super.registerCell(day, hour, cell)
+    }
+
+    registerEntryAtCurrentPosition(entry: TableEntry) {
+        super.registerEntry(this.currentDay, this.currentHour, entry)
+    }
+
+    getCurrentColor(): string {
+        return dayToColor(this.currentDay)
     }
 
     highlightCell(hour: string, day: Day = this.currentDay) {
@@ -52,6 +66,7 @@ export class SelectableTableManager extends TableManager {
             this.selectedCell.toggleSelection()
 
             this.currentDay = day
+            this.currentHour = hour
         }
     }
 }

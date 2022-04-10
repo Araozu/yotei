@@ -19,6 +19,7 @@ import { StyleSheet, css } from "aphrodite/no-important"
 import { Day, days } from "./Table"
 import { SubjectManager } from "./SubjectManager"
 import { Professor, ProfessorManager } from "./ProfessorManager"
+import { TableEntry } from "./Table/TableEntry"
 
 const style = StyleSheet.create({
     cli: {
@@ -51,14 +52,14 @@ const style = StyleSheet.create({
  * via a TableManager
  */
 export class CLI extends YElem {
-    private manager: SelectableTableManager
+    private tableManager: SelectableTableManager
     private subjectManager: SubjectManager
     private professorManager = new ProfessorManager()
 
     constructor(manager: SelectableTableManager, subjectManager: SubjectManager) {
         const parent = Y.div()
         super(parent)
-        this.manager = manager
+        this.tableManager = manager
         this.subjectManager = subjectManager
 
         const formEl = Y.form({style: "display: inline-block; width: 90%"})
@@ -101,7 +102,7 @@ export class CLI extends YElem {
         const result1 = CLI.parseGCommand(line)
         if (result1 !== null) {
             const [day, hour] = result1
-            this.manager.highlightCell(hour, day)
+            this.tableManager.highlightCell(hour, day)
         }
 
         const result2 = CLI.parseRCommand(line)
@@ -119,6 +120,27 @@ export class CLI extends YElem {
             }
 
             this.subjectManager.register(subject, group, professor)
+            console.log("subject registered", subject, group, professorName)
+        }
+
+        const result3 = CLI.parseACommand(line)
+        if (result3 !== null) {
+            const [subject, group, repeat] = result3
+            const isLab = group.length === 2
+            const groupLetter = isLab ? group.charAt(1) : group
+
+            if (this.subjectManager.has(subject, groupLetter, isLab)) {
+                const subjectObj = this.subjectManager.get(subject)!
+                // Create a table entry and register
+                const color = this.tableManager.getCurrentColor()
+                // TODO: clone
+                const entry = new TableEntry(subjectObj, group, isLab, color, this.tableManager)
+                this.tableManager.registerEntryAtCurrentPosition(entry)
+                console.log("Entry registered (?)")
+            } else {
+                // TODO: Error handling
+                console.log("subject not found", subject, group)
+            }
         }
     }
 
@@ -187,7 +209,7 @@ export class CLI extends YElem {
     }
 
     private static parseRCommand(line: string): [string, string | undefined, string | undefined] | null {
-        const values = /r\s+(\w+)\s+(l?\w)?\s+([\w\s]+)?/i.exec(line)
+        const values = /r\s+(\w+)\s*(l?\w)?\s*([\w\s]+)?/i.exec(line)
         if (values && values[1]) {
             return [values[1], values[2], values[3]]
         }
