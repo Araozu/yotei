@@ -14,7 +14,7 @@
  */
 
 import { SelectableTableCell, TableCell } from "./Table/TableCell"
-import { Day, dayToColor } from "./Table"
+import { Day, dayToColor, days, hours } from "./Table"
 import { TableEntry } from "./Table/TableEntry"
 
 export class TableManager {
@@ -34,8 +34,8 @@ export class TableManager {
 }
 
 export class SelectableTableManager extends TableManager {
-    private currentDay: Day = "Lunes"
-    private currentHour = "07:00"
+    private currentDay: Day = days[0]
+    private currentHour = hours[0]
     private selectedCell?: SelectableTableCell
 
     constructor() {
@@ -68,5 +68,25 @@ export class SelectableTableManager extends TableManager {
             this.currentDay = day
             this.currentHour = hour
         }
+    }
+
+    nextCell() {
+        const currentHourPosition = hours.findIndex((x) => this.currentHour === x)
+        // If the last hour is selected, go to first hour of the next day
+        if (currentHourPosition === -1 || currentHourPosition === hours.length - 1) {
+            const currentDayPosition = days.findIndex((x) => this.currentDay === x)
+            if (currentDayPosition === -1 && currentDayPosition === days.length - 1) {
+                // Go to first day
+                this.currentDay = days[0]
+                this.currentHour = hours[0]
+            } else {
+                // Go to next day
+                this.currentDay = days[currentDayPosition + 1]
+                this.currentHour = hours[0]
+            }
+        } else {
+            this.currentHour = hours[currentHourPosition + 1]
+        }
+        this.highlightCell(this.currentHour, this.currentDay)
     }
 }

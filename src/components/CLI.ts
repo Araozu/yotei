@@ -55,6 +55,7 @@ export class CLI extends YElem {
     private tableManager: SelectableTableManager
     private subjectManager: SubjectManager
     private professorManager = new ProfessorManager()
+    private inputEl: YElem
 
     constructor(manager: SelectableTableManager, subjectManager: SubjectManager) {
         const parent = Y.div()
@@ -64,6 +65,7 @@ export class CLI extends YElem {
 
         const formEl = Y.form({style: "display: inline-block; width: 90%"})
         const inputEl = Y.input({className: css(style.cliInput)})
+        this.inputEl = inputEl
         formEl.add(null, inputEl)
 
         parent.add({className: css(style.cli)}, [
@@ -99,10 +101,20 @@ export class CLI extends YElem {
      * @private
      */
     private interpret(line: string) {
+        const result0 = CLI.parseNCommand(line)
+        if (result0) {
+            this.tableManager.nextCell()
+            this.handleSuccess()
+            return
+        }
+
         const result1 = CLI.parseGCommand(line)
         if (result1 !== null) {
             const [day, hour] = result1
+            // TODO: check if hour exists, and handle error
             this.tableManager.highlightCell(hour, day)
+            this.handleSuccess()
+            return
         }
 
         const result2 = CLI.parseRCommand(line)
@@ -121,11 +133,13 @@ export class CLI extends YElem {
 
             this.subjectManager.register(subject, group, professor)
             console.log("subject registered", subject, group, professorName)
+            this.handleSuccess()
+            return
         }
 
         const result3 = CLI.parseACommand(line)
         if (result3 !== null) {
-            const [subject, group, repeat] = result3
+            const [subject, group, _repeat] = result3
             const isLab = group.length === 2
             const groupLetter = isLab ? group.charAt(1) : group
 
@@ -137,14 +151,37 @@ export class CLI extends YElem {
                 const entry = new TableEntry(subjectObj, group, isLab, color, this.tableManager)
                 this.tableManager.registerEntryAtCurrentPosition(entry)
                 console.log("Entry registered (?)")
+                this.handleSuccess()
             } else {
-                // TODO: Error handling
+                // TODO: Error handling with specific reasons shown to the user
                 console.log("subject not found", subject, group)
+                this.handleError()
             }
+            return
         }
+
+        this.handleError()
+    }
+
+    private handleError() {
+        const el = this.getInstance()
+        el.style.borderColor = "var(--c4)"
+        setTimeout(() => {
+            el.style.borderColor = "#dedede"
+        }, 2500)
+    }
+
+    private handleSuccess() {
+        const el = this.getInstance()
+        el.style.borderColor = "var(--c5)";
+        (this.inputEl.getInstance() as HTMLInputElement).value = ""
+        setTimeout(() => {
+            el.style.borderColor = "#dedede"
+        }, 500)
     }
 
     /**
+     * Moves to the specified cell
      * <pre>
      * g command = "g", {day}, time
      * digit = "0" .. "9"
@@ -192,6 +229,7 @@ export class CLI extends YElem {
     }
 
     /**
+     * Adds an entry to the current cell
      * <pre>
      * a command = "a", subject, group, {times}
      * group = {"l"}, "a" .. "z"
@@ -214,5 +252,17 @@ export class CLI extends YElem {
             return [values[1], values[2], values[3]]
         }
         return null
+    }
+
+    /**
+     * Moves the selected cell to the next position
+     * <pre>
+     * n command = "n"
+     * </pre>
+     * @param line
+     * @private
+     */
+    private static parseNCommand(line: string): boolean {
+        return /\s*n\s*/i.test(line)
     }
 }
