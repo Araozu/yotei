@@ -161,7 +161,7 @@ export class CLI extends YElem {
                     }
                 }
 
-                console.log("Entry registered (?)")
+                console.log("Entry registered")
                 this.handleSuccess()
             } else {
                 // TODO: Error handling with specific reasons shown to the user
@@ -201,7 +201,7 @@ export class CLI extends YElem {
      * @param line to test
      */
     private static parseGCommand(line: string): [Day | undefined, string] | null {
-        const regex = /g\s+((\w+)\s+)?(\d\d?\d?)/i.exec(line)
+        const regex = /^g\s+((\w+)\s+)?(\d\d?\d?)$/i.exec(line)
         if (regex && regex[3]) {
             let day: Day | undefined = undefined
             let hour = regex[3]
@@ -248,7 +248,7 @@ export class CLI extends YElem {
      * @param line to test
      */
     private static parseACommand(line: string): [string, string, number | null] | null {
-        const regex = /a\s+(\w+)\s+(l?\w)\s*(\d)?$/i.exec(line)
+        const regex = /^a\s+(\w+)\s+(l?\w)\s*(\d)?$/i.exec(line)
         if (regex && regex[1] && regex[2]) {
             const times = regex[3] ? parseInt(regex[3], 10) : null
             return [regex[1], regex[2], times]
@@ -258,7 +258,7 @@ export class CLI extends YElem {
     }
 
     private static parseRCommand(line: string): [string, string | undefined, string | undefined] | null {
-        const values = /r\s+(\w+)\s*(l?\w)?\s*([\w\s]+)?/i.exec(line)
+        const values = /^r\s+(\w+)\s*(l?\w)?\s*([\w\s]+)?$/i.exec(line)
         if (values && values[1]) {
             return [values[1], values[2], values[3]]
         }
@@ -274,6 +274,6 @@ export class CLI extends YElem {
      * @private
      */
     private static parseNCommand(line: string): boolean {
-        return /\s*n\s*/i.test(line)
+        return /^\s*n\s*$/i.test(line)
     }
 }
