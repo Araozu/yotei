@@ -16,7 +16,7 @@
 import { Professor } from "./ProfessorManager"
 import { Day } from "./Table"
 
-interface SerializedGroup {
+export interface SerializedGroup {
     letter: string
     professor: string
     hours: {day: Day, hour: string}[]
@@ -53,7 +53,7 @@ export class Group {
     }
 }
 
-interface SerializedSubject {
+export interface SerializedSubject {
     name: string
     fullName: string
     groups: SerializedGroup[]

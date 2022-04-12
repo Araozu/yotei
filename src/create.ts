@@ -21,6 +21,7 @@ import { Table } from "./components/Table"
 import { CLI } from "./components/CLI"
 import { SelectableTableManager } from "./components/TableManager"
 import { SubjectManager } from "./components/SubjectManager"
+import { horariosUnsaAdapter } from "./HorariosUnsaAdapter"
 
 const app = document.querySelector<HTMLDivElement>("#app")!
 const tableManager = new SelectableTableManager()
@@ -28,7 +29,7 @@ const subjectManager = new SubjectManager()
 
 const printButton = Y.button(null, "Serialize")
 printButton.getInstance().addEventListener("click", () => {
-    console.log(JSON.stringify(subjectManager.getSerializableObject()))
+    console.log(JSON.stringify(horariosUnsaAdapter(subjectManager.getSerializableObject())))
 })
 
 const tree = Y.div(null, [
