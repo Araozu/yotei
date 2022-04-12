@@ -16,6 +16,11 @@
 import { Professor } from "./ProfessorManager"
 import { Day } from "./Table"
 
+interface SerializedGroup {
+    letter: string
+    professor: string
+    hours: {day: Day, hour: string}[]
+}
 export class Group {
     /**
      * A letter that represents the course
@@ -31,8 +36,29 @@ export class Group {
         this.letter = letter
         this.professor = professor
     }
+
+    addHour(day: Day, hour: string) {
+        this.hours.push([day, hour])
+    }
+
+    getSerializableObject(): SerializedGroup {
+        return {
+            letter: this.letter,
+            professor: this.professor.name,
+            hours: this.hours.map(([day, hour]) => ({
+                day,
+                hour,
+            })),
+        }
+    }
 }
 
+interface SerializedSubject {
+    name: string
+    fullName: string
+    groups: SerializedGroup[]
+    labGroups: SerializedGroup[]
+}
 export class Subject {
     /**
      * An abbreviation of the subject, for display in the schedule. e.g. FP1
@@ -75,6 +101,22 @@ export class Subject {
             return this.groups.find((x) => x.letter === letter) !== undefined
         }
     }
+
+    addHour(letter: string, isLab: boolean, day: Day, hour: string) {
+        const group = isLab
+            ? this.labGroups.find((x) => x.letter === letter)!
+            : this.groups.find((x) => x.letter === letter)!
+        group.addHour(day, hour)
+    }
+
+    getSerializableObject(): SerializedSubject {
+        return {
+            name: this.name,
+            fullName: this.fullName,
+            groups: this.groups.map((x) => x.getSerializableObject()),
+            labGroups: this.labGroups.map((x) => x.getSerializableObject()),
+        }
+    }
 }
 
 export class SubjectManager {
@@ -102,5 +144,13 @@ export class SubjectManager {
 
     get(subjectName: string): Subject | undefined {
         return this.subjects.get(subjectName)
+    }
+
+    getSerializableObject(): {[k: string]: SerializedSubject} {
+        const obj: {[k: string]: SerializedSubject} = {}
+        for (const [subjectName, subject] of this.subjects.entries()) {
+            obj[subjectName] = subject.getSerializableObject()
+        }
+        return obj
     }
 }

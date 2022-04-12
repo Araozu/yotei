@@ -150,13 +150,16 @@ export class CLI extends YElem {
                 const entry = new TableEntry(subjectObj, group, isLab, color, this.tableManager)
 
                 this.tableManager.registerEntryAtCurrentPosition(entry)
+                let [currentHour, currentDay] = this.tableManager.getCurrentCoordinates()
+                subjectObj.addHour(groupLetter, isLab, currentDay, currentHour)
 
                 if (repeat && repeat > 1) {
-                    let r = repeat
-                    let [currentHour, currentDay] = this.tableManager.getCurrentCoordinates()
+                    let r = repeat;
+                    [currentHour, currentDay] = this.tableManager.getCurrentCoordinates()
                     while (r > 1) {
                         [currentHour, currentDay] = SelectableTableManager.getNextCellCoordinates(currentHour, currentDay)
                         this.tableManager.registerEntry(currentDay, currentHour, entry.clone())
+                        subjectObj.addHour(groupLetter, isLab, currentDay, currentHour)
                         r -= 1
                     }
                 }

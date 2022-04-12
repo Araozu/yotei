@@ -25,10 +25,17 @@ import { SubjectManager } from "./components/SubjectManager"
 const app = document.querySelector<HTMLDivElement>("#app")!
 const tableManager = new SelectableTableManager()
 const subjectManager = new SubjectManager()
+
+const printButton = Y.button(null, "Serialize")
+printButton.getInstance().addEventListener("click", () => {
+    console.log(JSON.stringify(subjectManager.getSerializableObject()))
+})
+
 const tree = Y.div(null, [
     new Header(false),
     Y.br(),
     new Table(tableManager),
+    printButton,
     new CLI(tableManager, subjectManager),
 ])
 app.appendChild(tree.getInstance())
