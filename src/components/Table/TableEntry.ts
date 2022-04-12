@@ -68,11 +68,12 @@ export class TableEntry extends YElem {
 
     constructor(
         subject: Subject,
-        group: string,
+        _group: string,
         isLab: boolean,
         color: string,
         manager: TableManager,
     ) {
+        const group = _group.toUpperCase()
         const parent = Y.div()
         super(parent)
         parent.add(

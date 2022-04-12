@@ -147,7 +147,7 @@ export class CLI extends YElem {
                 const subjectObj = this.subjectManager.get(subject)!
                 // Create a table entry and register
                 const color = this.tableManager.getCurrentColor()
-                const entry = new TableEntry(subjectObj, group, isLab, color, this.tableManager)
+                const entry = new TableEntry(subjectObj, groupLetter, isLab, color, this.tableManager)
 
                 this.tableManager.registerEntryAtCurrentPosition(entry)
                 let [currentHour, currentDay] = this.tableManager.getCurrentCoordinates()

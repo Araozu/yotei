@@ -22,7 +22,7 @@ export class Professor {
 
 export class ProfessorManager {
     /**
-     * Maps a character with a sorted array of professors
+     * Maps a character with a (possibly) sorted array of professors
      */
     private professors = new Map<string, Professor[]>()
 

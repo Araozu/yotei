@@ -33,7 +33,7 @@ export class Group {
     public readonly hours: [Day, string][] = []
 
     constructor(letter: string, professor: Professor) {
-        this.letter = letter
+        this.letter = letter.toUpperCase()
         this.professor = professor
     }
 
@@ -72,11 +72,12 @@ export class Subject {
     private labGroups: Group[] = []
 
     constructor(name: string, fullName = "") {
-        this.name = name
+        this.name = name.toUpperCase()
         this.fullName = fullName
     }
 
-    addGroup(letter: string, professor: Professor, isLab = false): Group {
+    addGroup(_letter: string, professor: Professor, isLab = false): Group {
+        const letter = _letter.toUpperCase()
         const group = new Group(letter, professor)
         if (isLab) {
             this.labGroups.push(group)
@@ -86,7 +87,8 @@ export class Subject {
         return group
     }
 
-    getGroup(letter: string, isLab = false): Group | undefined {
+    getGroup(_letter: string, isLab = false): Group | undefined {
+        const letter = _letter.toUpperCase()
         if (isLab) {
             return this.groups.find((x) => x.letter === letter)
         } else {
@@ -94,7 +96,8 @@ export class Subject {
         }
     }
 
-    hasGroup(letter: string, isLab = false): boolean {
+    hasGroup(_letter: string, isLab = false): boolean {
+        const letter = _letter.toUpperCase()
         if (isLab) {
             return this.labGroups.find((x) => x.letter === letter) !== undefined
         } else {
@@ -102,7 +105,8 @@ export class Subject {
         }
     }
 
-    addHour(letter: string, isLab: boolean, day: Day, hour: string) {
+    addHour(_letter: string, isLab: boolean, day: Day, hour: string) {
+        const letter = _letter.toUpperCase()
         const group = isLab
             ? this.labGroups.find((x) => x.letter === letter)!
             : this.groups.find((x) => x.letter === letter)!
@@ -122,7 +126,9 @@ export class Subject {
 export class SubjectManager {
     private subjects = new Map<string, Subject>()
 
-    register(subjectName: string, group?: string, professor?: Professor) {
+    register(_subjectName: string, _group?: string, professor?: Professor) {
+        const subjectName = _subjectName.toUpperCase()
+        const group = _group?.toUpperCase()
         if (!this.subjects.has(subjectName)) {
             this.subjects.set(subjectName, new Subject(subjectName))
         }
@@ -136,13 +142,16 @@ export class SubjectManager {
         }
     }
 
-    has(subjectName: string, group: string, isLab: boolean): boolean {
+    has(_subjectName: string, _group: string, isLab: boolean): boolean {
+        const subjectName = _subjectName.toUpperCase()
+        const group = _group?.toUpperCase()
         if (!this.subjects.has(subjectName)) return false
         const subject = this.subjects.get(subjectName)!
         return subject.hasGroup(group, isLab)
     }
 
-    get(subjectName: string): Subject | undefined {
+    get(_subjectName: string): Subject | undefined {
+        const subjectName = _subjectName.toUpperCase()
         return this.subjects.get(subjectName)
     }
 
